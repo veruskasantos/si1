@@ -1,0 +1,115 @@
+@(anuncios: List[Anuncio], instr : List[Instrumento], estilo : List[Estilo])
+
+<html lang="">
+    <head>
+        <title>Hibernate Example</title>
+        <meta charset="UTF-8">
+        <meta name=description content="">
+        <meta name=viewport content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Bootstrap CSS -->
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    </head>
+    <body>
+    <div class="content">
+    
+    
+    <section id="cadastro">
+    	<div class="col-sm-7">
+        <h2 class="text-center">@anuncios.size() anúncio(s)</h2>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Título </th>
+                            <th>Descrição </th>
+                            <th>Cidade</th>
+                            <th>Bairro</th>
+                            <th>Contato</th>
+                            <th>Contato1</th>
+                            <th>Contato2</th>
+                            <th>Instrumentos</th>
+                            <th> Estilo </th>
+                            <th>Ações </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(anuncio <- anuncios) {
+                        <tr>
+                            <td>@anuncio.getTitulo()</td>
+                            <td>@anuncio.getDescricao()</td>
+                            <td>@anuncio.getCidade()</td>
+                            <td>@anuncio.getBairro()</td>
+                            <td>@anuncio.getContato()</td>
+                            <td></td>
+                            <td></td>
+                            <td> 
+                                @for(instrument <- anuncio.getInstrumentos()) {
+                                    <p> @instrument.getNome()</p>
+                                }
+                            </td>
+                            <td>
+                            @for(estilo <- anuncio.getEstilos()) {
+                                    <p> @estilo.getNome()</p>
+                            }
+                            </td>
+                            <td>
+                            <!-- form action="@routes.Application.deleteBook(anuncio.getId())" method="post"> 
+                                <input type="submit" class="btn btn-danger" value="Delete">
+                            </form-->
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+		<div class="col-sm-4">
+        <h2>Cria um novo Anúncio</h2>
+
+        <form action="@routes.Application.newBook()" method="post"> 
+            <label for="titulo"> Título: </label>
+            <input type="text" name="titulo" id="inputNome" class="form-control"required="required">
+            
+            <label for="descricao"> Descrição: </label>
+            <input type="text" name="descricao" id="inputDescricao" class="form-control" required="required">
+            
+            <label for="cidade"> Cidade: </label>
+            <input type="text" name="cidade" id="inputCidade" class="form-control" required="required">
+            
+            <label for="bairro"> Bairro: </label>
+            <input type="text" name="bairro" id="inputBairro" class="form-control" required="required">
+            
+            <label for="contato"> Contato: </label>
+            <input type="text" name="contato" id="inputContato" class="form-control" required="required">
+            
+            <label for="instrumentos"> Instrumento: </label>
+            <select name="instrumentos" id="inputAutores" class="form-control multiselect" multiple="multiple" required="required">
+                     @for(instrument <- instr) {
+                     <option value="@instrument.getId()">@instrument.getNome()</option>
+               		}
+             </select>
+             
+             <label for="estilos"> Estilo: </label>
+            <select name="estilos" id="inputEstilos" class="form-control multiselect" multiple="multiple" required="required">
+                     @for(est <- estilo) {
+                     <option value="@est.getId()">@est.getNome()</option>
+               		}
+             </select>
+            
+            <input type="submit" class="btn btn-primary" value="Create">
+        </form>
+
+        </div>
+        </section>
+    </div>
+
+        <!-- jQuery -->
+        <script src="http://code.jquery.com/jquery.js"></script>
+        <!-- Bootstrap JavaScript -->
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    </body>
+</html>
+
+    
