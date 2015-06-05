@@ -1,4 +1,4 @@
-@(anuncios: List[Anuncio], instr : List[Instrumento], estilo : List[Estilo], estiloNG : List[EstiloNO])
+@(anuncios: List[Anuncio], instr : List[Instrumento], estilo : List[Estilo], estiloNG : List[EstiloNO], contador : Long)
 
 <!DOCTYPE: html>
 <html lang="pt-br">
@@ -34,7 +34,6 @@
     
     <div class="col-sm-9" align="center">
     	<h2>Veja a lista de anúncios cadastrados</h2>
-        <h3 class="text-center">@anuncios.size() anúncio(s)</h3>
             <div class="table-responsive" align="center">
                 <table class="table table-hover">
                     <thead>
@@ -90,7 +89,7 @@
                     </tbody>
                 </table>
             </div>
-            
+             <h3 class="text-center">@contador anúncio(s) já ajudaram as pessoas</h3>
     <form action="@routes.Application.anuncios()">
     <input type="submit" class="btn btn-primary" value="Criar Novo Anúncio">
     </form>
@@ -110,7 +109,10 @@
         <label for="codigo">Digite o código do anúncio</label>
         <input type="input" name="codigo" class="form-control" required="required">
         
-        <input type="submit" class="btn btn-danger" value="Delete">
+        <label for="satisfeito">Encontrou os parceiros que procurava?</label>
+        <input type="input" name="satisfeito" class="form-control" placeholder="Sim ou Não" required="required">
+        
+        <input type="submit" class="btn btn-danger" value="Remover Anúncio">
         </form>
         </div>
     </section>

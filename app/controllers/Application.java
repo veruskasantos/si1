@@ -22,6 +22,7 @@ import play.mvc.Result;
 public class Application extends Controller {
 	private static Form<Anuncio> anuncioForm = Form.form(Anuncio.class);
 	private static final GenericDAO dao = new GenericDAO();
+	private static Long satisfacao = 0L;
 	
 
 	@Transactional
@@ -30,7 +31,7 @@ public class Application extends Controller {
 		List<Instrumento> result1 = dao.findAllByClass(Instrumento.class);
 		List<Estilo> result2 = dao.findAllByClass(Estilo.class);
 		List<EstiloNO> result3 = dao.findAllByClass(EstiloNO.class);
-		return ok(views.html.novo.render(result, result1, result2, result3));
+		return ok(views.html.novo.render(result, result1, result2, result3, satisfacao));
 		//return redirect(routes.Application.books());
 	}
 
@@ -84,7 +85,7 @@ public class Application extends Controller {
              * hard-coded no código. Dessa forma, se mudamos no
              * arquivo routes, continua funcionando.
              */
-			return redirect(routes.Application.anuncios());
+			return redirect(routes.Application.index());
 		}
 	}
 	
@@ -152,13 +153,17 @@ public class Application extends Controller {
 	
 	
 	@Transactional
-	public static Result removeAnuncio(Long id, String nome){
+	public static Result removeAnuncio(Long id, String nome, String satisfeito){
 		
 		Anuncio anuncio = dao.findByEntityId(Anuncio.class, id);
 		if(anuncio != null){
 			if(anuncio.getCodigo().equals(nome)){
 				dao.removeById(Anuncio.class, id);
 				dao.flush();
+				
+				if(satisfeito.equalsIgnoreCase("Sim")){
+					satisfacao++;
+				}
 			}
 		}
 		

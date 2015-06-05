@@ -12,4 +12,4 @@ GET      /index                controllers.Application.anuncios()
 
 GET     /books                  controllers.Application.anuncios()
 POST    /books                  controllers.Application.novoAnuncio()
-GET     /books/removeAnuncio     controllers.Application.removeAnuncio(anuncio: Long, codigo: String)
+GET     /books/removeAnuncio     controllers.Application.removeAnuncio(anuncio: Long, codigo: String, satisfeito : String)
