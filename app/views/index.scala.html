@@ -1,4 +1,4 @@
-@(anuncios: List[Anuncio], instr : List[Instrumento], estilo : List[Estilo])
+@(anuncios: List[Anuncio], instr : List[Instrumento], estilo : List[Estilo], estiloNG : List[EstiloNO])
 
 <html lang="">
     <head>
@@ -9,80 +9,45 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Bootstrap CSS -->
         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    	<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/violao.jpg")">
     </head>
     <body>
     <div class="content">
     
     
     <section id="cadastro">
-    	<div class="col-sm-7">
-        <h2 class="text-center">@anuncios.size() anúncio(s)</h2>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Título </th>
-                            <th>Descrição </th>
-                            <th>Cidade</th>
-                            <th>Bairro</th>
-                            <th>Contato</th>
-                            <th>Contato1</th>
-                            <th>Contato2</th>
-                            <th>Instrumentos</th>
-                            <th> Estilo </th>
-                            <th>Ações </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @for(anuncio <- anuncios) {
-                        <tr>
-                            <td>@anuncio.getTitulo()</td>
-                            <td>@anuncio.getDescricao()</td>
-                            <td>@anuncio.getCidade()</td>
-                            <td>@anuncio.getBairro()</td>
-                            <td>@anuncio.getContato()</td>
-                            <td></td>
-                            <td></td>
-                            <td> 
-                                @for(instrument <- anuncio.getInstrumentos()) {
-                                    <p> @instrument.getNome()</p>
-                                }
-                            </td>
-                            <td>
-                            @for(estilo <- anuncio.getEstilos()) {
-                                    <p> @estilo.getNome()</p>
-                            }
-                            </td>
-                            <td>
-                            <!-- form action="@routes.Application.deleteBook(anuncio.getId())" method="post"> 
-                                <input type="submit" class="btn btn-danger" value="Delete">
-                            </form-->
-                            </td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    	
 
 		<div class="col-sm-4">
         <h2>Cria um novo Anúncio</h2>
 
-        <form action="@routes.Application.newBook()" method="post"> 
+        <form action="@routes.Application.novoAnuncio()" method="post"> 
+        	<label for="codigo"> Código </label>
+        	<input type="text" name="codigo" id="inputCodigo" placeholder="Código de segurança" class="form-control" required="required">
+        
             <label for="titulo"> Título: </label>
-            <input type="text" name="titulo" id="inputNome" class="form-control"required="required">
+            <input type="text" name="titulo" id="inputNome" placeholder="Título do seu anúncio" class="form-control"required="required">
             
             <label for="descricao"> Descrição: </label>
-            <input type="text" name="descricao" id="inputDescricao" class="form-control" required="required">
+            <input type="text" name="descricao" id="inputDescricao" placeholder="Descreva o que você quer anunciar" class="form-control" required="required">
             
             <label for="cidade"> Cidade: </label>
-            <input type="text" name="cidade" id="inputCidade" class="form-control" required="required">
+            <input type="text" name="cidade" id="inputCidade" placeholder="Cidade onde mora" class="form-control" required="required">
             
             <label for="bairro"> Bairro: </label>
-            <input type="text" name="bairro" id="inputBairro" class="form-control" required="required">
+            <input type="text" name="bairro" id="inputBairro" placeholder="Bairro onde mora" class="form-control" required="required">
             
-            <label for="contato"> Contato: </label>
-            <input type="text" name="contato" id="inputContato" class="form-control" required="required">
+            <label for="email"> E-mail: </label>
+            <input type="text" name="email" id="inputEmail" placeholder="Seu email" class="form-control" required="required">
+            
+            <label for="facebook"> Facebook: </label>
+            <input type="text" name="facebook" id="inputFace" placeholder="Seu link do facebook" class="form-control" required="required">
+            
+            <label for="banda"> Deseja formar banda? </label>
+            <input type="text" name="banda" id="inputBanda" placeholder="Sim ou Não" class="form-control" required="required">
+            
+            <label for="tocar"> Deseja tocar ocasionalmente? </label>
+            <input type="text" name="tocar" id="inputTocar" placeholder="Sim ou Não" class="form-control" required="required">
             
             <label for="instrumentos"> Instrumento: </label>
             <select name="instrumentos" id="inputAutores" class="form-control multiselect" multiple="multiple" required="required">
@@ -91,8 +56,15 @@
                		}
              </select>
              
-             <label for="estilos"> Estilo: </label>
-            <select name="estilos" id="inputEstilos" class="form-control multiselect" multiple="multiple" required="required">
+             <label for="estilosG"> Estilo que gosta: </label>
+            <select name="estilosG" id="inputEstilosG" class="form-control multiselect" multiple="multiple">
+                     @for(est <- estilo) {
+                     <option value="@est.getId()">@est.getNome()</option>
+               		}
+             </select>
+             
+              <label for="estilosNG"> Estilo que não gosta: </label>
+            <select name="estilosNG" id="inputEstilosNG" class="form-control multiselect" multiple="multiple">
                      @for(est <- estilo) {
                      <option value="@est.getId()">@est.getNome()</option>
                		}

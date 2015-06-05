@@ -1,5 +1,6 @@
 import play.*;
 import models.Estilo;
+import models.EstiloNO;
 import models.Instrumento;
 import models.dao.GenericDAO;
 import play.db.jpa.JPA;
@@ -95,21 +96,51 @@ public class Global extends GlobalSettings {
 				dao.persist(estilo18);
 				dao.persist(estilo19);
 				
+				
+				EstiloNO estiloN = new EstiloNO("Brega");
+				EstiloNO estiloN1 = new EstiloNO("Forró");
+				EstiloNO estiloN2 = new EstiloNO("Acústico");
+				EstiloNO estiloN3 = new EstiloNO("Gospel");
+				EstiloNO estiloN4 = new EstiloNO("Axé");
+				EstiloNO estiloN5 = new EstiloNO("Heavy Metal");
+				EstiloNO estiloN6 = new EstiloNO("Jazz");
+				EstiloNO estiloN7 = new EstiloNO("MPB");
+				EstiloNO estiloN8 = new EstiloNO("Pagode");
+				EstiloNO estiloN9 = new EstiloNO("Samba");
+				EstiloNO estiloN10 = new EstiloNO("Pop");
+				EstiloNO estiloN11 = new EstiloNO("Reggae");
+				EstiloNO estiloN12 = new EstiloNO("Sertanejo");
+				EstiloNO estiloN13 = new EstiloNO("Eletrônico");
+				EstiloNO estiloN14 = new EstiloNO("Funk");
+				EstiloNO estiloN15 = new EstiloNO("HipHop");
+				EstiloNO estiloN16 = new EstiloNO("Rock");
+				EstiloNO estiloN17 = new EstiloNO("Rap");
+				EstiloNO estiloN18 = new EstiloNO("Punk");
+				EstiloNO estiloN19 = new EstiloNO("Blues");
+				
+				dao.persist(estiloN);
+				dao.persist(estiloN1);
+				dao.persist(estiloN2);
+				dao.persist(estiloN3);
+				dao.persist(estiloN4);
+				dao.persist(estiloN5);
+				dao.persist(estiloN6);
+				dao.persist(estiloN7);
+				dao.persist(estiloN8);
+				dao.persist(estiloN9);
+				dao.persist(estiloN10);
+				dao.persist(estiloN11);
+				dao.persist(estiloN12);
+				dao.persist(estiloN13);
+				dao.persist(estiloN14);
+				dao.persist(estiloN15);
+				dao.persist(estiloN16);
+				dao.persist(estiloN17);
+				dao.persist(estiloN18);
+				dao.persist(estiloN19);
+				
 				dao.flush();
-				
-				
-				/*Livro livro = new Livro();
-				livro.setTitulo("Meu livro");
-
-				Autor novoAutor = new Autor();
-				novoAutor.setNome("Meu autor");
-
-				livro.getAutores().add(novoAutor);
-				novoAutor.getAnuncios().add(livro);
-
-				dao.persist(novoAutor);
-				dao.merge(livro);
-				dao.flush();	*/			
+							
 			}});		
 	}
 		

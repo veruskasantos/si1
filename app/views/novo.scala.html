@@ -1,4 +1,4 @@
-
+@(anuncios: List[Anuncio], instr : List[Instrumento], estilo : List[Estilo], estiloNG : List[EstiloNO])
 
 <!DOCTYPE: html>
 <html lang="pt-br">
@@ -21,20 +21,99 @@
    </head>
    
    <body >
+ 
    
+    <section id="telaInicial" >
+    <div class="content" align="center">
+    <h3>Site para formar bandas musicais ou encontrar parceiros para tocar casualmente.</h3>
    
-   <div class="content" align="center">
-   
-   
-    <section id="telaInicial">
-   <h2>Aqui você poderá encontrar parceiros musicais para formar uma nova banda ou apenas tocar esporadicamente</h2>
-   <h2>Crie um anúncio informando suas preferências e aguarde contato dos possíveis interessados</h2>
-    <h3>Experimente!</h3>
-    <form action="@routes.Application.books()">
+    </div>
+    
+    
+    
+    
+    <div class="col-sm-9" align="center">
+    	<h2>Veja a lista de anúncios cadastrados</h2>
+        <h3 class="text-center">@anuncios.size() anúncio(s)</h3>
+            <div class="table-responsive" align="center">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Título </th>
+                            <th>Descrição</th>
+                            <th>Cidade</th>
+                            <th>Bairro</th>
+                            <th>Email</th>
+                            <th>Facebook</th>
+                            <th>Banda</th>
+                            <th>Tocar</th>
+                            <th>Instrumentos</th>
+                            <th>EstilosG</th>
+                            <th>EstilosNG</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(anuncio <- anuncios) {
+                        <tr>
+                            <td>@anuncio.getTitulo()</td>
+                            <td>@anuncio.getDescricao()</td>
+                            <td>@anuncio.getCidade()</td>
+                            <td>@anuncio.getBairro()</td>
+                            <td>@anuncio.getEmail()</td>
+                            <td>@anuncio.getFacebook()</td>
+                            <td>@anuncio.getBanda()</td>
+                            <td>@anuncio.getTocar()</td>
+                            <td> 
+                                @for(instrument <- anuncio.getInstrumentos()) {
+                                    <p> @instrument.getNome()</p>
+                                }
+                            </td>
+                            <td>
+                            @for(estiloG <- anuncio.getEstilosGosta()) {
+                                    <p> @estiloG.getNome()</p>
+                            }
+                            </td>
+                            
+                            <td>
+                            @for(estiloNG <- anuncio.getEstilosNaoGosta()) {
+                                    <p> @estiloNG.getNome()</p>
+                            }
+                            </td>
+                            <!-- td>
+                            < form action="@@routes.Application.deleteBook(anuncio.getId())" method="post"> 
+                                <input type="submit" class="btn btn-danger" value="Delete">
+                            </form>
+                            </td-->
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+            
+    <form action="@routes.Application.anuncios()">
     <input type="submit" class="btn btn-primary" value="Criar Novo Anúncio">
     </form>
+        </div>
+        
+        
+        <div class="col-sm-3" align="center">
+        <h3>Deseja excluir algum anúncio?</h3>
+        
+        <form action="/books/removeAnuncio" method="get">
+        <label for="anuncio"> Selecione o anúncio</label>
+        <select name="anuncio" id="inputAnuncio" class="form-control multiselect" required="required">
+                     @for(anuncio <- anuncios) {
+                     <option value="@anuncio.getId()">@anuncio.getTitulo()</option>
+               		}
+             </select>
+        <label for="codigo">Digite o código do anúncio</label>
+        <input type="input" name="codigo" class="form-control" required="required">
+        
+        <input type="submit" class="btn btn-danger" value="Delete">
+        </form>
+        </div>
     </section>
-    </div>
    
    <!-- jQuery -->
         <script src="http://code.jquery.com/jquery.js"></script>

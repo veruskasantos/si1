@@ -11,10 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
-
-@Entity(name = "Estilo")
-public class Estilo {
-
+@Entity (name ="EstiloNO")
+public class EstiloNO {
+	
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -26,11 +25,11 @@ public class Estilo {
 	
 	private String nome;
 	
-	public Estilo(){
+	public EstiloNO(){
 		this.anuncios = new ArrayList<Anuncio>();
 	}
 	
-	 public Estilo(String nome){
+	 public EstiloNO(String nome){
 		 this.nome = nome;
 	 }
 	
@@ -50,6 +49,5 @@ public class Estilo {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
-	
+
 }

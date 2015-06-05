@@ -8,10 +8,8 @@ GET     /                           controllers.Application.index()
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
-GET      /index                controllers.Application.books()
+GET      /index                controllers.Application.anuncios()
 
-GET     /books                  controllers.Application.books()
-POST    /books                  controllers.Application.newBook()
-POST    /books/:id/delete       controllers.Application.deleteBook(id: Long)
-# addAutor
-GET     /books/addInstrumento        controllers.Application.addInstrumento(livro:Long, autor:String)
+GET     /books                  controllers.Application.anuncios()
+POST    /books                  controllers.Application.novoAnuncio()
+GET     /books/removeAnuncio     controllers.Application.removeAnuncio(anuncio: Long, codigo: String)

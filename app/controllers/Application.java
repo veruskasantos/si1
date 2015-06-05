@@ -7,6 +7,7 @@ import java.util.Map;
 
 import models.Anuncio;
 import models.Estilo;
+import models.EstiloNO;
 import models.Instrumento;
 import models.dao.GenericDAO;
 import play.Logger;
@@ -19,14 +20,17 @@ import play.mvc.Result;
  * Controlador Principal do Sistema
  */
 public class Application extends Controller {
-	private static Form<Anuncio> bookForm = Form.form(Anuncio.class);
+	private static Form<Anuncio> anuncioForm = Form.form(Anuncio.class);
 	private static final GenericDAO dao = new GenericDAO();
 	
 
 	@Transactional
 	public static Result index() {
-		
-		return ok(views.html.novo.render());
+		List<Anuncio> result = dao.findAllByClass(Anuncio.class);
+		List<Instrumento> result1 = dao.findAllByClass(Instrumento.class);
+		List<Estilo> result2 = dao.findAllByClass(Estilo.class);
+		List<EstiloNO> result3 = dao.findAllByClass(EstiloNO.class);
+		return ok(views.html.novo.render(result, result1, result2, result3));
 		//return redirect(routes.Application.books());
 	}
 
@@ -35,36 +39,39 @@ public class Application extends Controller {
 	 * usarem o BD.
 	 */
 	@Transactional
-	public static Result books() {
+	public static Result anuncios() {
 		
 		// Todos os Livros do Banco de Dados
 		List<Anuncio> result = dao.findAllByClass(Anuncio.class);
 		List<Instrumento> result1 = dao.findAllByClass(Instrumento.class);
 		List<Estilo> result2 = dao.findAllByClass(Estilo.class);
+		List<EstiloNO> result3 = dao.findAllByClass(EstiloNO.class);
 		
-		return ok(views.html.index.render(result, result1, result2));
+		return ok(views.html.index.render(result, result1, result2, result3));
 	}
 
 	@Transactional
-	public static Result newBook() {
+	public static Result novoAnuncio() {
 		// O formulário dos Livros Preenchidos
-		Form<Anuncio> filledForm = bookForm.bindFromRequest();
+		Form<Anuncio> filledForm = anuncioForm.bindFromRequest();
 
 		if (filledForm.hasErrors()) {
             List<Anuncio> result = dao.findAllByClass(Anuncio.class);
             List<Instrumento> result1 = dao.findAllByClass(Instrumento.class);
             List<Estilo> result2 = dao.findAllByClass(Estilo.class); 
+            List<EstiloNO> result3 = dao.findAllByClass(EstiloNO.class);
             //TODO falta colocar na interface mensagem de erro.
-			return badRequest(views.html.index.render(result, result1, result2));
+			return badRequest(views.html.index.render(result, result1, result2, result3));
 		} else {
 			
             Anuncio novoAnuncio = filledForm.get();
             novoAnuncio.addInstrumento(getInstrumentosSelecionados());
-            novoAnuncio.addEstilo(getEstilosSelecionados());
+            novoAnuncio.addEstiloGosta(getEstilosSelecionados());
+            novoAnuncio.addEstiloNaoGosta(getEstilosNGSelecionados());
             
             Logger.debug("Criando livro: " + filledForm.data().toString() + " como " + novoAnuncio.getTitulo()
             		+ " " + novoAnuncio.getDescricao() + " " + novoAnuncio.getCidade() + " " + novoAnuncio.getBairro()
-            		+ " " + novoAnuncio.getContato() + " " + novoAnuncio.getInstrumentos().toString());
+            		+ " " + novoAnuncio.getEmail() + " " + novoAnuncio.getInstrumentos().toString());
            
 			// Persiste o Livro criado
 			dao.persist(novoAnuncio);
@@ -77,7 +84,7 @@ public class Application extends Controller {
              * hard-coded no código. Dessa forma, se mudamos no
              * arquivo routes, continua funcionando.
              */
-			return redirect(routes.Application.books());
+			return redirect(routes.Application.anuncios());
 		}
 	}
 	
@@ -107,7 +114,7 @@ public class Application extends Controller {
 		List<Estilo> estilos = new ArrayList<Estilo>();
 		//pega todos os elementos da pag
 		Map<String,String[]> map = request().body().asFormUrlEncoded();
-		String[] recuperaEstilos = map.get("estilos");
+		String[] recuperaEstilos = map.get("estilosG");
 		
 		if(recuperaEstilos != null){
 			List<String> idEstilos = Arrays.asList(recuperaEstilos);
@@ -122,43 +129,40 @@ public class Application extends Controller {
 		return estilos;
 	}
 	
-
+	
 	@Transactional
-	public static Result addInstrumento(Long id, String nome) {
-		criaAutorDoLivro(id, nome);
-        return redirect(routes.Application.books());
+	private static List<EstiloNO> getEstilosNGSelecionados(){
+		List<EstiloNO> estilos = new ArrayList<EstiloNO>();
+		//pega todos os elementos da pag
+		Map<String,String[]> map = request().body().asFormUrlEncoded();
+		String[] recuperaEstilos = map.get("estilosNG");
+		
+		if(recuperaEstilos != null){
+			List<String> idEstilos = Arrays.asList(recuperaEstilos);
+			for(String id : idEstilos){
+				Long idEstilo = Long.parseLong(id);
+				EstiloNO estilo = dao.findByEntityId(EstiloNO.class, idEstilo);
+				if(estilo != null) {
+					estilos.add(estilo);
+				}
+			}
+		}
+		return estilos;
 	}
-
-	private static void criaAutorDoLivro(Long id, String nome) {
-		// Cria um novo Autor para um livro de {@code id}
-		Instrumento novoInstrumento = new Instrumento(nome);
-		// Procura um objeto da classe Livro com o {@code id}
-		Anuncio anuncioDaListagem = dao.findByEntityId(Anuncio.class, id);
-		// Faz o direcionamento de cada um
-		anuncioDaListagem.addInstrumento(novoInstrumento);
-		novoInstrumento.addAnuncio(anuncioDaListagem);
-		// Persiste o Novo Autor
-		dao.persist(novoInstrumento);
-
-		/* As informações do livro já serão automaticamente atualizadas
-		 * no BD no final da transação. Isso porque o livro já existe
-		 * no BD, e então já é gerenciado por ele.
-		 *
-		 * Assim fica opcional fazer dao.merge(livroDaListagem);
-		 */
-		// Espelha no Banco de Dados
-		dao.flush();
-	}
-
-	// Notação transactional sempre que o método fizer transação com o Banco de
-	// Dados.
+	
+	
 	@Transactional
-	public static Result deleteBook(Long id) {
-		// Remove o Livro pelo Id
-		dao.removeById(Anuncio.class, id);
-		// Espelha no banco de dados
-		dao.flush();
-		return redirect(routes.Application.books());
+	public static Result removeAnuncio(Long id, String nome){
+		
+		Anuncio anuncio = dao.findByEntityId(Anuncio.class, id);
+		if(anuncio != null){
+			if(anuncio.getCodigo().equals(nome)){
+				dao.removeById(Anuncio.class, id);
+				dao.flush();
+			}
+		}
+		
+		return redirect(routes.Application.index());
 	}
 
 }

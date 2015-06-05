@@ -14,7 +14,7 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 
-import models.Livro;
+import models.Anuncio;
 import models.dao.GenericDAO;
 
 import org.junit.Test;
@@ -48,14 +48,14 @@ public class ApplicationControllerTest extends AbstractTest {
 		// correspondente.
 		assertThat(status(result)).isEqualTo(Http.Status.OK);
 		assertThat(charset(result)).isEqualTo("utf-8");
-		assertThat(contentAsString(result)).contains("0 livro(s)");
+		assertThat(contentAsString(result)).contains("0 anúncio(s)");
 	}
 	
 	@Test
 	public void callNewBook() {
 		// Mapa com os dados do formulario para criação do livro
 		Map<String, String> formData = new HashMap<String, String>();
-		formData.put("nome", "Calculo I");
+		formData.put("titulo", "Banda");
 		
 		// realiza a chamada ao método newBook() do Application com o
 		// formulário.
@@ -71,17 +71,17 @@ public class ApplicationControllerTest extends AbstractTest {
 		// testa se realmente adicionou o livro com nome "Calculo I" no banco de
 		// dados.
         GenericDAO dao = new GenericDAO();
-		List<Livro> livros = dao.findAllByClass(Livro.class);
-		assertThat(livros.size()).isEqualTo(1);
-        assertThat(livros.get(0).getTitulo()).isEqualTo("Calculo I");
-		List<Livro> result2 = dao.findByAttributeName("Livro", 
-				"nome", "Calculo I");	
+		List<Anuncio> anuncios = dao.findAllByClass(Anuncio.class);
+		assertThat(anuncios.size()).isEqualTo(1);
+        assertThat(anuncios.get(0).getTitulo()).isEqualTo("Banda");
+		List<Anuncio> result2 = dao.findByAttributeName("Anuncio", 
+				"titulo", "Banda");	
 		assertThat(result2.size()).isEqualTo(1);
 		
 		// verifica o html gerado pela url '/books' que é chamada dentro do newBook
 		result = callAction(controllers.routes.ref.Application.books(),
 				fakeRequest());
 		assertThat(status(result)).isEqualTo(Http.Status.OK);
-		assertThat(contentAsString(result)).contains("1 livro(s)");
+		assertThat(contentAsString(result)).contains("1 anúncio(s)");
 	}
 }

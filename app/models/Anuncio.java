@@ -9,10 +9,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
 
 import com.google.common.base.Objects;
 
@@ -29,7 +27,10 @@ public class Anuncio {
 		private List<Instrumento> instrumentos;
 	    
 	    @ManyToMany(cascade  = CascadeType.ALL)
-	    private List<Estilo> estilos;
+	    private List<Estilo> estilosGosta;
+	    
+	    @ManyToMany(cascade  = CascadeType.ALL)
+	    private List<EstiloNO> estilosNaoGosta;
 
 		@Column
 		private String titulo;
@@ -40,21 +41,36 @@ public class Anuncio {
 		
 		private String bairro;
 		
-		private String contato;
+		private String email;
+		
+		private String facebook;
+		
+		private String formarBanda;
+		
+		private String tocarCasual;
+		
+		private String codigo;
 
 		// Construtor vazio para o Hibernate criar os objetos
 		public Anuncio() {
 			this.instrumentos = new ArrayList<Instrumento>();
-			this.estilos = new ArrayList<Estilo>();
+			this.estilosGosta = new ArrayList<Estilo>();
+			this.estilosNaoGosta = new ArrayList<EstiloNO>();
 		}
 
-	    public Anuncio(String titulo, String descricao, String cidade, String bairro, String contato, Instrumento... instrumentos) {
+	    public Anuncio(String titulo, String descricao, String cidade, String bairro, String email, 
+	    		String facebook, String formarBanda, String tocarCasual,
+	    		String codigo, Instrumento... instrumentos) {
 	        this();
 	        this.titulo = titulo;
 	        this.descricao = descricao;
 	        this.cidade = cidade;
 	        this.bairro = bairro;
-	        this.contato = contato;
+	        this.email = email;
+	        this.facebook = facebook;
+	        this.formarBanda = formarBanda;
+	        this.tocarCasual = tocarCasual;
+	        this.codigo = codigo;
 	        this.instrumentos = Arrays.asList(instrumentos);
 	    }
 
@@ -95,12 +111,44 @@ public class Anuncio {
 	        this.descricao = descricao;
 	    }
 	    
-	    public String getContato() {
-	       return contato;
+	    public String getEmail() {
+	       return email;
 	    }
 
-	    public void setContato(String contato) {
-	        this.contato = contato;
+	    public void setEmail(String email) {
+	        this.email = email;
+	    }
+	    
+	    public String getFacebook() {
+		       return facebook;
+		    }
+
+		public void setFacebook(String facebook) {
+		        this.facebook = facebook;
+		}
+		
+		public String getBanda() {
+			return formarBanda;
+		}
+
+	    public void setBanda(String banda) {
+	        this.formarBanda = banda;
+	    }
+	    
+	    public String getTocar() {
+			return tocarCasual;
+		}
+
+	    public void setTocar(String tocar) {
+	        this.tocarCasual = tocar;
+	    }
+	    
+	    public String getCodigo() {
+			return codigo;
+		}
+
+	    public void setCodigo(String codigo) {
+	        this.codigo = codigo;
 	    }
 
 	    public Long getId() {
@@ -125,22 +173,26 @@ public class Anuncio {
 	        return Collections.unmodifiableList(instrumentos);
 	    }
 	    
-	    public List<Estilo> getEstilos() {
-	        return Collections.unmodifiableList(estilos);
+	    public List<Estilo> getEstilosGosta() {
+	        return Collections.unmodifiableList(estilosGosta);
 	    }
 
-	    public void addEstilo(List<Estilo> estilo) {
-	        estilos = estilo;
+	    public void addEstiloGosta(List<Estilo> estilo) {
+	        estilosGosta = estilo;
+	    }
+	    
+	    public List<EstiloNO> getEstilosNaoGosta() {
+	        return Collections.unmodifiableList(estilosNaoGosta);
+	    }
+
+	    public void addEstiloNaoGosta(List<EstiloNO> estiloNG) {
+	        estilosNaoGosta = estiloNG;
 	    }
 	    
 	    public void addInstrumento(List<Instrumento> instrumento) {
 	        instrumentos = instrumento;
 	    }
 	    
-	    //REMOVER
-	    public void addInstrumento(Instrumento instrumento) {
-	        instrumentos.add(instrumento);
-	    }
 
 	    public void setId(long id) {
 	        this.id = id;
