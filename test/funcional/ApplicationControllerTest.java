@@ -40,9 +40,9 @@ public class ApplicationControllerTest extends AbstractTest {
 	}
 	
 	@Test
-	public void callBooks() {
-		// realiza a chamada ao método books() do Application
-		result = callAction(controllers.routes.ref.Application.books(),
+	public void callAnuncios() {
+		// realiza a chamada ao método anuncios() do Application
+		result = callAction(controllers.routes.ref.Application.anuncios(),
 				fakeRequest());
 		// ao chamar o método index do Application, ele retora o html
 		// correspondente.
@@ -68,7 +68,7 @@ public class ApplicationControllerTest extends AbstractTest {
 		assertThat(status(result)).isEqualTo(Http.Status.SEE_OTHER);
 		assertThat(redirectLocation(result)).isEqualTo("/books");
 
-		// testa se realmente adicionou o livro com nome "Calculo I" no banco de
+		// testa se realmente adicionou o anúncio com nome "Anuncio" no banco de
 		// dados.
         GenericDAO dao = new GenericDAO();
 		List<Anuncio> anuncios = dao.findAllByClass(Anuncio.class);

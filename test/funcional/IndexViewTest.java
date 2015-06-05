@@ -50,17 +50,19 @@ public class IndexViewTest {
         
 	}
 
-	// Testa o template index.scala.html
+	// Testa o template novo.scala.html
 	@Test
-	public void indexTemplate() {
+	public void novoTemplate() {
+		
 		anuncios.add(anuncio1);
 		instrumentos.add(instrumento1);
 		estilos.add(estilo1);
 		estilosNO.add(estiloN);
+		int contador = 0;
 
 		// guarda o html resultante da renderização do index.scala.html
 		// com a lista de anuncios e o formulario
-		Content html = index.render(anuncios, instrumentos, estilos, estilosNO);
+		Content html = views.html.novo.render(anuncios, instrumentos, estilos, estilosNO, contador);
 		assertThat(contentType(html)).isEqualTo("text/html");
 		// verifica se o html contém a determimnada string
 		assertThat(contentAsString(html)).contains(anuncio1.getTitulo());
@@ -74,6 +76,19 @@ public class IndexViewTest {
 		assertThat(contentAsString(html)).contains(anuncio1.getDescricao());
 		assertThat(contentAsString(html)).contains(instrumento1.getNome());
 		assertThat(contentAsString(html)).contains(estilo1.getNome());
+	}
+	
+	// Testa o template index.scala.html
+	@Test
+	public void indexTemplate(){
+		
+		anuncios.add(anuncio1);
+		instrumentos.add(instrumento1);
+		estilos.add(estilo1);
+		estilosNO.add(estiloN);
+		
+		Content html = index.render(anuncios, instrumentos, estilos, estilosNO);
+		assertThat(contentType(html)).isEqualTo("text/html");
 	}
 
 }

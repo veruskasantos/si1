@@ -22,7 +22,6 @@ public class Instrumento {
 	@GeneratedValue
 	private Long id;
 
-	// Nome do Autor dos Livros
 	private String nome;
 
 	// Relação Muitos para Muitos

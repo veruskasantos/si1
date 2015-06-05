@@ -20,19 +20,34 @@ import play.mvc.Result;
  * Controlador Principal do Sistema
  */
 public class Application extends Controller {
+	
 	private static Form<Anuncio> anuncioForm = Form.form(Anuncio.class);
 	private static final GenericDAO dao = new GenericDAO();
 	private static Long satisfacao = 0L;
 	
-
 	@Transactional
 	public static Result index() {
+		
 		List<Anuncio> result = dao.findAllByClass(Anuncio.class);
 		List<Instrumento> result1 = dao.findAllByClass(Instrumento.class);
 		List<Estilo> result2 = dao.findAllByClass(Estilo.class);
 		List<EstiloNO> result3 = dao.findAllByClass(EstiloNO.class);
+		
+		boolean houveTroca = true;
+		Anuncio aux;
+		while(houveTroca){
+			houveTroca = false;
+			for (int i = 0; i < result.size() -1; i++) {
+				if(result.get(i).getData().isAfter(result.get(i+1).getData())){
+					aux = result.get(i);
+					result.set(i, result.get(i+1));
+					result.set(i+1, aux);
+					houveTroca = true;
+				}	
+			}
+		}
+		
 		return ok(views.html.novo.render(result, result1, result2, result3, satisfacao));
-		//return redirect(routes.Application.books());
 	}
 
 	/*
@@ -42,55 +57,50 @@ public class Application extends Controller {
 	@Transactional
 	public static Result anuncios() {
 		
-		// Todos os Livros do Banco de Dados
-		List<Anuncio> result = dao.findAllByClass(Anuncio.class);
+		//List<Anuncio> result = dao.findAllByClass(Anuncio.class);
 		List<Instrumento> result1 = dao.findAllByClass(Instrumento.class);
 		List<Estilo> result2 = dao.findAllByClass(Estilo.class);
 		List<EstiloNO> result3 = dao.findAllByClass(EstiloNO.class);
 		
-		return ok(views.html.index.render(result, result1, result2, result3));
+		return ok(views.html.index.render(result1, result2, result3));
 	}
 
 	@Transactional
 	public static Result novoAnuncio() {
-		// O formulário dos Livros Preenchidos
+		// O formulário dos Anúncios Preenchidos
 		Form<Anuncio> filledForm = anuncioForm.bindFromRequest();
 
 		if (filledForm.hasErrors()) {
-            List<Anuncio> result = dao.findAllByClass(Anuncio.class);
+            //List<Anuncio> result = dao.findAllByClass(Anuncio.class);
             List<Instrumento> result1 = dao.findAllByClass(Instrumento.class);
             List<Estilo> result2 = dao.findAllByClass(Estilo.class); 
             List<EstiloNO> result3 = dao.findAllByClass(EstiloNO.class);
             //TODO falta colocar na interface mensagem de erro.
-			return badRequest(views.html.index.render(result, result1, result2, result3));
+			return badRequest(views.html.index.render(result1, result2, result3));
 		} else {
 			
             Anuncio novoAnuncio = filledForm.get();
             novoAnuncio.addInstrumento(getInstrumentosSelecionados());
-            novoAnuncio.addEstiloGosta(getEstilosSelecionados());
-            novoAnuncio.addEstiloNaoGosta(getEstilosNGSelecionados());
+            novoAnuncio.addListEstiloGosta(getEstilosSelecionados());
+            novoAnuncio.addListEstiloNaoGosta(getEstilosNGSelecionados());
             
             Logger.debug("Criando livro: " + filledForm.data().toString() + " como " + novoAnuncio.getTitulo()
             		+ " " + novoAnuncio.getDescricao() + " " + novoAnuncio.getCidade() + " " + novoAnuncio.getBairro()
-            		+ " " + novoAnuncio.getEmail() + " " + novoAnuncio.getInstrumentos().toString());
+            		+ " " + novoAnuncio.getEmail() + " " + novoAnuncio.getFacebook() + " " + novoAnuncio.getBanda()
+            		+ " " + novoAnuncio.getTocar() + " " + novoAnuncio.getDataFormatada());
            
-			// Persiste o Livro criado
-			dao.persist(novoAnuncio);
 			
+			dao.persist(novoAnuncio);
 			// Espelha no Banco de Dados
 			dao.flush();
-            /*
-             * Usar routes.Application.<uma action> é uma forma de
-             * evitar colocar rotas literais (ex: "/books")
-             * hard-coded no código. Dessa forma, se mudamos no
-             * arquivo routes, continua funcionando.
-             */
+           
 			return redirect(routes.Application.index());
 		}
 	}
 	
 	@Transactional
 	private static List<Instrumento> getInstrumentosSelecionados(){
+		
 		List<Instrumento> instrumentos = new ArrayList<Instrumento>();
 		//pega todos os elementos da pag
 		Map<String,String[]> map = request().body().asFormUrlEncoded();
@@ -112,8 +122,9 @@ public class Application extends Controller {
 	
 	@Transactional
 	private static List<Estilo> getEstilosSelecionados(){
+		
 		List<Estilo> estilos = new ArrayList<Estilo>();
-		//pega todos os elementos da pag
+		//pega todos os elementos da página
 		Map<String,String[]> map = request().body().asFormUrlEncoded();
 		String[] recuperaEstilos = map.get("estilosG");
 		
@@ -133,6 +144,7 @@ public class Application extends Controller {
 	
 	@Transactional
 	private static List<EstiloNO> getEstilosNGSelecionados(){
+		
 		List<EstiloNO> estilos = new ArrayList<EstiloNO>();
 		//pega todos os elementos da pag
 		Map<String,String[]> map = request().body().asFormUrlEncoded();

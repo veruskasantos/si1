@@ -12,13 +12,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import org.joda.time.LocalDate;
+
 import com.google.common.base.Objects;
 
 @Entity(name = "Anuncio")
 public class Anuncio {
-
-	// Todo Id tem que ter o GeneratedValue a não ser que ele seja setado
-		// Usar Id sempre Long
+	
 		@Id
 		@GeneratedValue
 		private Long id;
@@ -50,12 +50,15 @@ public class Anuncio {
 		private String tocarCasual;
 		
 		private String codigo;
+		
+		private LocalDate data;
 
 		// Construtor vazio para o Hibernate criar os objetos
 		public Anuncio() {
 			this.instrumentos = new ArrayList<Instrumento>();
 			this.estilosGosta = new ArrayList<Estilo>();
 			this.estilosNaoGosta = new ArrayList<EstiloNO>();
+			this.data = LocalDate.now();
 		}
 
 	    public Anuncio(String titulo, String descricao, String cidade, String bairro, String email, 
@@ -71,6 +74,7 @@ public class Anuncio {
 	        this.formarBanda = formarBanda;
 	        this.tocarCasual = tocarCasual;
 	        this.codigo = codigo;
+	        this.data = LocalDate.now();
 	        this.instrumentos = Arrays.asList(instrumentos);
 	    }
 
@@ -154,6 +158,20 @@ public class Anuncio {
 	    public Long getId() {
 			return id;
 		}
+	    
+	    public String getDataFormatada(){
+	    	String aux = data.dayOfMonth().get() + "/" + data.monthOfYear().get()
+	    			+ "/" + data.year().get();
+	    	return aux;
+	    }
+	    
+	    public LocalDate getData() {
+			return data;
+		}
+
+	    public void setData(LocalDate data) {
+	        this.data = data;
+	    }
 
 		@Override
 		public boolean equals(Object obj) {
@@ -177,25 +195,31 @@ public class Anuncio {
 	        return Collections.unmodifiableList(estilosGosta);
 	    }
 
-	    public void addEstiloGosta(List<Estilo> estilo) {
-	        estilosGosta = estilo;
+	    public void addEstiloGosta(Estilo... estilo) {
+	    	this.estilosGosta = Arrays.asList(estilo);
+	    }
+	    
+	    public void addListEstiloGosta(List<Estilo> estilo) {
+	    	this.estilosGosta = estilo;
 	    }
 	    
 	    public List<EstiloNO> getEstilosNaoGosta() {
 	        return Collections.unmodifiableList(estilosNaoGosta);
 	    }
 
-	    public void addEstiloNaoGosta(List<EstiloNO> estiloNG) {
-	        estilosNaoGosta = estiloNG;
+	    public void addEstiloNaoGosta(EstiloNO... estiloNG) {
+	    	this.estilosNaoGosta = Arrays.asList(estiloNG);
+	    }
+	    
+	    public void addListEstiloNaoGosta(List<EstiloNO> estiloNG) {
+	    	this.estilosNaoGosta = estiloNG;
 	    }
 	    
 	    public void addInstrumento(List<Instrumento> instrumento) {
 	        instrumentos = instrumento;
 	    }
 	    
-
 	    public void setId(long id) {
 	        this.id = id;
 	    }
-	
 }
